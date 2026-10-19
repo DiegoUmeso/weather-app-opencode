@@ -100,7 +100,8 @@ async function buscar(texto) {
     const ciudad = await buscarCiudad(texto);
 
     if (ciudad === null) {
-      mostrarError("No encontramos esa ciudad. Prueba con otro nombre.");
+      // No es un fallo técnico: no ofrecemos "Reintentar".
+      mostrarMensaje("No encontramos esa ciudad. Prueba con otro nombre.");
       return;
     }
 

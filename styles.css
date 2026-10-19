@@ -5,6 +5,12 @@
   box-sizing: border-box;
 }
 
+/* El atributo "hidden" debe ocultar siempre, aunque el elemento tenga
+   su propio "display" (p. ej. .pronostico usa display: grid). */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   padding: 16px;
