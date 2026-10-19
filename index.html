@@ -23,7 +23,17 @@
 
     <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
 
-    <section id="clima-actual" class="tarjeta" hidden></section>
+    <section id="clima-actual" class="tarjeta" hidden>
+      <h2 id="ciudad-nombre"></h2>
+      <p id="ciudad-condicion" class="condicion"></p>
+      <dl class="datos">
+        <div><dt>Temperatura</dt><dd id="dato-temperatura"></dd></div>
+        <div><dt>Sensación térmica</dt><dd id="dato-sensacion"></dd></div>
+        <div><dt>Viento</dt><dd id="dato-viento"></dd></div>
+        <div><dt>Humedad</dt><dd id="dato-humedad"></dd></div>
+      </dl>
+    </section>
+
     <section id="pronostico" class="pronostico" hidden></section>
   </main>
 

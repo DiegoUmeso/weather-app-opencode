@@ -72,6 +72,40 @@ h1 {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.tarjeta h2 {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+}
+
+.condicion {
+  margin: 0 0 12px;
+  color: #52606d;
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 16px;
+  margin: 0;
+}
+
+.datos div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #e4e7eb;
+}
+
+.datos dt {
+  color: #52606d;
+}
+
+.datos dd {
+  margin: 0;
+  font-weight: 600;
+}
+
 .pronostico {
   display: grid;
   grid-template-columns: 1fr;
@@ -79,8 +113,12 @@ h1 {
   margin-top: 16px;
 }
 
-/* En pantallas más anchas, el pronóstico se reparte en columnas. */
+/* En pantallas más anchas, los datos y el pronóstico se reparten en columnas. */
 @media (min-width: 560px) {
+  .datos {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .pronostico {
     grid-template-columns: repeat(3, 1fr);
   }
