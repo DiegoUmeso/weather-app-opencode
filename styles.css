@@ -1,0 +1,87 @@
+/* styles.css — estilos de la Weather App.
+   Mobile primero: una sola columna que también se ve bien en computadora. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  color: #1f2933;
+  background: #eef2f7;
+}
+
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 8px 0 16px;
+  text-align: center;
+}
+
+.buscador {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.buscador label {
+  flex: 1 1 100%;
+  font-weight: 600;
+}
+
+.buscador input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #cbd2d9;
+  border-radius: 8px;
+}
+
+.buscador button {
+  padding: 10px 16px;
+  font-size: 1rem;
+  color: #fff;
+  background: #2563eb;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.buscador button:hover {
+  background: #1d4ed8;
+}
+
+.mensaje {
+  min-height: 1.5rem;
+  margin: 16px 0;
+}
+
+.tarjeta {
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pronostico {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* En pantallas más anchas, el pronóstico se reparte en columnas. */
+@media (min-width: 560px) {
+  .pronostico {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

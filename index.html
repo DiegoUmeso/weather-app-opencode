@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <h1>Weather App</h1>
+
+    <form id="form-busqueda" class="buscador">
+      <label for="input-ciudad">Ciudad</label>
+      <input
+        id="input-ciudad"
+        name="ciudad"
+        type="text"
+        placeholder="Escribe una ciudad"
+        autocomplete="off">
+      <button type="submit">Buscar</button>
+    </form>
+
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+
+    <section id="clima-actual" class="tarjeta" hidden></section>
+    <section id="pronostico" class="pronostico" hidden></section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
