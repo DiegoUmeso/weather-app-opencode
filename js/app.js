@@ -14,12 +14,24 @@ const datoHumedad = document.getElementById("dato-humedad");
 
 const pronostico = document.getElementById("pronostico");
 
+const btnBuscar = document.getElementById("btn-buscar");
+const btnReintentar = document.getElementById("btn-reintentar");
+
 // Longitud mínima: la API no devuelve nada para vacío ni para 1 carácter.
 const MINIMO_CARACTERES = 2;
+
+// Última búsqueda válida: la usa el botón "Reintentar".
+let ultimaBusqueda = "";
 
 // Muestra un texto en la zona de mensajes.
 function mostrarMensaje(texto) {
   mensaje.textContent = texto;
+}
+
+// Esconde los resultados anteriores (clima y pronóstico).
+function ocultarResultados() {
+  climaActual.hidden = true;
+  pronostico.hidden = true;
 }
 
 // Rellena la tarjeta del clima actual.
@@ -69,38 +81,60 @@ function mostrarPronostico(forecast) {
   pronostico.hidden = false;
 }
 
-// Se ejecuta al enviar el formulario.
-async function alBuscar(evento) {
-  evento.preventDefault();
-  const texto = input.value.trim();
+// Muestra un error y ofrece volver a intentar.
+function mostrarError(texto) {
+  mostrarMensaje(texto);
+  btnReintentar.hidden = false;
+}
 
-  // Ocultamos los resultados anteriores en cuanto empieza una búsqueda nueva.
-  climaActual.hidden = true;
-  pronostico.hidden = true;
+// Hace la búsqueda completa: ciudad y luego clima.
+async function buscar(texto) {
+  ultimaBusqueda = texto;
 
-  if (texto.length < MINIMO_CARACTERES) {
-    mostrarMensaje(`Escribe al menos ${MINIMO_CARACTERES} caracteres para buscar.`);
-    return;
-  }
-
-  mostrarMensaje("Buscando...");
+  ocultarResultados();
+  btnReintentar.hidden = true;
+  btnBuscar.disabled = true; // evita envíos repetidos mientras se espera
+  mostrarMensaje("Buscando la ciudad...");
 
   try {
     const ciudad = await buscarCiudad(texto);
 
     if (ciudad === null) {
-      mostrarMensaje("No encontramos esa ciudad. Prueba con otro nombre.");
+      mostrarError("No encontramos esa ciudad. Prueba con otro nombre.");
       return;
     }
 
-    mostrarMensaje(`${ciudad.name}, ${ciudad.country} — ${ciudad.latitude}, ${ciudad.longitude}`);
+    mostrarMensaje("Consultando el clima...");
 
     const { current, forecast } = await obtenerClima(ciudad.latitude, ciudad.longitude);
+
+    mostrarMensaje(`${ciudad.name}, ${ciudad.country} — ${ciudad.latitude}, ${ciudad.longitude}`);
     mostrarClimaActual(ciudad, current);
     mostrarPronostico(forecast);
   } catch (error) {
-    mostrarMensaje("No se pudo obtener el clima. Revisa tu conexión e inténtalo de nuevo.");
+    // Pase lo que pase (red o API), la interfaz vuelve a quedar usable.
+    mostrarError("No se pudo obtener el clima. Revisa tu conexión e inténtalo de nuevo.");
+  } finally {
+    btnBuscar.disabled = false;
   }
 }
+
+// Se ejecuta al enviar el formulario.
+function alBuscar(evento) {
+  evento.preventDefault();
+  const texto = input.value.trim();
+
+  if (texto.length < MINIMO_CARACTERES) {
+    ocultarResultados();
+    btnReintentar.hidden = true;
+    mostrarMensaje(`Escribe al menos ${MINIMO_CARACTERES} caracteres para buscar.`);
+    return;
+  }
+
+  buscar(texto);
+}
+
+// El botón "Reintentar" repite la última búsqueda válida.
+btnReintentar.addEventListener("click", () => buscar(ultimaBusqueda));
 
 form.addEventListener("submit", alBuscar);

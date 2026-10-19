@@ -18,10 +18,11 @@
         type="text"
         placeholder="Escribe una ciudad"
         autocomplete="off">
-      <button type="submit">Buscar</button>
+      <button id="btn-buscar" type="submit">Buscar</button>
     </form>
 
     <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+    <button id="btn-reintentar" class="reintentar" type="button" hidden>Reintentar</button>
 
     <section id="clima-actual" class="tarjeta" hidden>
       <h2 id="ciudad-nombre"></h2>

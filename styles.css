@@ -60,6 +60,25 @@ h1 {
   background: #1d4ed8;
 }
 
+.buscador button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.reintentar {
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  color: #2563eb;
+  background: transparent;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.reintentar:hover {
+  background: #e0e7ff;
+}
+
 .mensaje {
   min-height: 1.5rem;
   margin: 16px 0;
