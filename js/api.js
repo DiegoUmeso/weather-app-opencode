@@ -4,6 +4,7 @@
 const GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
 
 // Busca una ciudad por nombre y devuelve la primera coincidencia.
+// Devuelve null si no hay coincidencias.
 // Lanza un error si la red falla o si la API responde con un error HTTP.
 async function buscarCiudad(nombre) {
   const url = `${GEOCODING_URL}?name=${encodeURIComponent(nombre)}&count=1&language=es&format=json`;
@@ -14,7 +15,14 @@ async function buscarCiudad(nombre) {
   }
 
   const datos = await respuesta.json();
-  const ciudad = datos.results[0];
+  const resultados = datos.results;
+
+  // La API omite "results" cuando no encuentra ninguna coincidencia.
+  if (!resultados || resultados.length === 0) {
+    return null;
+  }
+
+  const ciudad = resultados[0];
 
   return {
     name: ciudad.name,
