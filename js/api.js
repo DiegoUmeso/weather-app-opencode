@@ -73,12 +73,17 @@ function describirCodigo(codigo) {
   return DESCRIPCIONES_TIEMPO[codigo] || "Condición desconocida";
 }
 
-// Consulta el clima actual de unas coordenadas.
+// Consulta el clima actual y el pronóstico de 3 días de unas coordenadas.
+// Devuelve { current, forecast }.
 // Lanza un error si la red falla o si la API responde con un error HTTP.
+const DIAS_PRONOSTICO = 3;
+
 async function obtenerClima(latitud, longitud) {
   const url =
     `${FORECAST_URL}?latitude=${latitud}&longitude=${longitud}` +
     "&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code" +
+    "&daily=temperature_2m_max,temperature_2m_min,weather_code" +
+    `&forecast_days=${DIAS_PRONOSTICO}` +
     "&timezone=auto";
 
   const respuesta = await fetch(url);
@@ -90,7 +95,7 @@ async function obtenerClima(latitud, longitud) {
   const datos = await respuesta.json();
   const actual = datos.current;
 
-  return {
+  const current = {
     temperature: actual.temperature_2m,
     apparentTemperature: actual.apparent_temperature,
     weatherCode: actual.weather_code,
@@ -98,4 +103,17 @@ async function obtenerClima(latitud, longitud) {
     windSpeed: actual.wind_speed_10m,
     humidity: actual.relative_humidity_2m,
   };
+
+  // La API devuelve el diario en columnas paralelas (una lista por variable).
+  const diario = datos.daily;
+
+  const forecast = diario.time.map((fecha, i) => ({
+    date: fecha,
+    tempMin: diario.temperature_2m_min[i],
+    tempMax: diario.temperature_2m_max[i],
+    weatherCode: diario.weather_code[i],
+    weatherCondition: describirCodigo(diario.weather_code[i]),
+  }));
+
+  return { current, forecast };
 }

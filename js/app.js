@@ -12,6 +12,8 @@ const datoSensacion = document.getElementById("dato-sensacion");
 const datoViento = document.getElementById("dato-viento");
 const datoHumedad = document.getElementById("dato-humedad");
 
+const pronostico = document.getElementById("pronostico");
+
 // Longitud mínima: la API no devuelve nada para vacío ni para 1 carácter.
 const MINIMO_CARACTERES = 2;
 
@@ -31,13 +33,50 @@ function mostrarClimaActual(ciudad, clima) {
   climaActual.hidden = false;
 }
 
+// Convierte "2026-10-19" en un texto corto, p. ej. "lun, 19 oct".
+function formatearFecha(iso) {
+  const fecha = new Date(`${iso}T00:00:00`);
+  return fecha.toLocaleDateString("es-ES", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+// Dibuja una tarjeta por día del pronóstico.
+function mostrarPronostico(forecast) {
+  pronostico.replaceChildren();
+
+  for (const dia of forecast) {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "dia";
+
+    const fecha = document.createElement("h3");
+    fecha.textContent = formatearFecha(dia.date);
+
+    const condicion = document.createElement("p");
+    condicion.className = "condicion";
+    condicion.textContent = dia.weatherCondition;
+
+    const temperaturas = document.createElement("p");
+    temperaturas.className = "temps";
+    temperaturas.textContent = `Máx ${dia.tempMax} °C / Mín ${dia.tempMin} °C`;
+
+    tarjeta.append(fecha, condicion, temperaturas);
+    pronostico.append(tarjeta);
+  }
+
+  pronostico.hidden = false;
+}
+
 // Se ejecuta al enviar el formulario.
 async function alBuscar(evento) {
   evento.preventDefault();
   const texto = input.value.trim();
 
-  // Ocultamos el resultado anterior en cuanto empieza una búsqueda nueva.
+  // Ocultamos los resultados anteriores en cuanto empieza una búsqueda nueva.
   climaActual.hidden = true;
+  pronostico.hidden = true;
 
   if (texto.length < MINIMO_CARACTERES) {
     mostrarMensaje(`Escribe al menos ${MINIMO_CARACTERES} caracteres para buscar.`);
@@ -56,8 +95,9 @@ async function alBuscar(evento) {
 
     mostrarMensaje(`${ciudad.name}, ${ciudad.country} — ${ciudad.latitude}, ${ciudad.longitude}`);
 
-    const clima = await obtenerClima(ciudad.latitude, ciudad.longitude);
-    mostrarClimaActual(ciudad, clima);
+    const { current, forecast } = await obtenerClima(ciudad.latitude, ciudad.longitude);
+    mostrarClimaActual(ciudad, current);
+    mostrarPronostico(forecast);
   } catch (error) {
     mostrarMensaje("No se pudo obtener el clima. Revisa tu conexión e inténtalo de nuevo.");
   }
